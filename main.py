@@ -1,14 +1,20 @@
-import MySQLdb as _mysql
+from database.mysql import MySQLDatabase
 
-db = _mysql.connect(db='employees_db',
-                    host='localhost',
-                    user='root',
-                    passwd='root')
+my_db_connection = MySQLDatabase('employees_db',
+                                 'root',
+                                 'root')
 
-my_cursor = db.cursor()
 
-my_cursor.execute("UPDATE employees SET first_name = 'Eoin' WHERE emp_no=10001")
-my_cursor.execute("SELECT * FROM employees")
-results = my_cursor.fetchone()
+my_tables = my_db_connection.get_available_tables()
+
+my_col = my_db_connection.get_columns_for_table('dept_emp')
+
+kwrgs = {'where': "emp_no-2"}
+
+results = my_db_connection.select('dept_manager', columns=['em', 'first_name'], named_tuples=True, **kwrgs)
+
+
 
 print results
+print my_tables
+print my_col
